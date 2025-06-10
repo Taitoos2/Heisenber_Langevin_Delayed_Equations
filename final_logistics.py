@@ -4,6 +4,38 @@ from scipy.sparse import kron, eye, csr_matrix
 from dataclasses import dataclass, field
 from typing import Callable, Optional
 
+
+#------------ploting format-----------------------------------------
+
+Colors_array = np.asarray([
+    ["#08589e", "#4eb3d3"],  
+    ["#91003f", "#c994c7"],  
+    ["#006600", "#99FF99"],  
+    ["#cc4c02", "#fe9929"],  
+    ["black", "#E0E0E0"],    
+    ["#990000", "#FFCCCC"],  
+])
+
+markerlist = ["o", "s", "D", "p", "8", "v", "p", "v", "^", "8"]  
+
+def format_plot(n: int, mark: int = None):
+    
+    color_idx = n % len(Colors_array)
+    marker_idx = n % len(markerlist)
+    
+    params = {
+        'color': Colors_array[color_idx, 1],
+        'markeredgecolor': Colors_array[color_idx, 0],
+        'markeredgewidth': 1.5,
+        'marker': markerlist[marker_idx],  # Añade el marcador correspondiente
+    }
+    
+    if mark is not None:
+        params['markevery'] = mark
+    
+    return params
+# --------------------------- base functions used in class --------------------------------------------------- 
+
 def sm_operator_s(i: int, n: int) -> np.ndarray:
 	''' generator of sigma^{-}_{i} operators in the initial state (standard pauli matrices times the identity)'''
 	return csr_matrix(mkron(np.eye(2**i), [[0, 0], [1, 0]], np.eye(2 ** (n - i - 1))))
